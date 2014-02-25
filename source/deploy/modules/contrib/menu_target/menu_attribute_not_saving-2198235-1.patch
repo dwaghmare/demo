@@ -1,0 +1,51 @@
+diff --git a/menu_target.admin.inc b/menu_target.admin.inc
+index 221033e..54b4bc4 100755
+--- a/menu_target.admin.inc
++++ b/menu_target.admin.inc
+@@ -41,7 +41,7 @@ function menu_target_edit_form_extra_elements(&$form, $node_form) {
+     $target = array(
+       '#type' => ($attribute == 'html' ? 'select' : 'checkbox'),
+       '#title' => t('Open this link in a new window'),
+-      '#default_value' => (isset($options['attributes']) && isset($options['attributes'][$attribute]) && in_array($attribute_value, $options['attributes'][$attribute])),
++      '#default_value' => (isset($options['attributes']) && isset($options['attributes'][$attribute]) && in_array($attribute_value, $options['attributes'])),
+     );
+ 
+     // Depanding on the form type, this element is placed in the
+@@ -89,21 +89,21 @@ function _menu_target_edit_form_extra_elements_submit($form, &$form_state) {
+ 
+   // If the user has checked the 'open in new window' checkbox,
+   // we'll add the right attribute and it's value to the menu's options array.
+-  if ($values['target']) {
++  if ($values['target']==0) {
+     if (!isset($values['options']['attributes'])) {
+       $values['options']['attributes'] = array($attribute => array($attribute_value));
+     }
+     elseif (!isset($values['options']['attributes'][$attribute])) {
+       $values['options']['attributes'][$attribute] = array($attribute_value);
+     }
+-    elseif (!in_array($attribute_value, $values['options']['attributes'][$attribute])) {
+-      $values['options']['attributes'][$attribute][] = $attribute_value;
++    elseif (!in_array($attribute_value, $values['options']['attributes'])) {
++      $values['options']['attributes'][$attribute] = $attribute_value;
+     }
+   }
+   else {
+     // Clean up the attributes class array.
+-    if (isset($values['options']['attributes']) && isset($values['options']['attributes'][$attribute]) && in_array($attribute_value, $values['options']['attributes'][$attribute])) {
+-      unset($values['options']['attributes'][$attribute][array_search($attribute_value, $values['options']['attributes'][$attribute])]);
++    if (isset($values['options']['attributes']) && isset($values['options']['attributes']) && in_array($attribute_value, $values['options']['attributes'])) {
++      unset($values['options']['attributes'][array_search($attribute_value, $values['options']['attributes'])]);
+       if (empty($values['options']['attributes'][$attribute])) {
+         unset($values['options']['attributes'][$attribute]);
+       }
+diff --git a/menu_target.info b/menu_target.info
+index f1faef6..b334aee 100755
+--- a/menu_target.info
++++ b/menu_target.info
+@@ -2,5 +2,5 @@ name = Menu target
+ description = Allows administrators to choose wether or not to open menu items in a new window.
+ package = Other
+ core = 7.x
+-
++dependencies[] = menu_attributes
+ configure = admin/structure/menu/settings

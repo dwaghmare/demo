@@ -1,0 +1,13 @@
+***************
+*** 2,6 ****
+  description = Allows administrators to choose wether or not to open menu items in a new window.
+  package = Other
+  core = 7.x
+- 
+  configure = admin/structure/menu/settings
+--- 2,6 ----
+  description = Allows administrators to choose wether or not to open menu items in a new window.
+  package = Other
+  core = 7.x
++ dependencies[] = menu_attributes
+  configure = admin/structure/menu/settings
